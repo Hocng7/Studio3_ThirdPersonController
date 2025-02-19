@@ -122,4 +122,15 @@ public class Player : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Coin")) // Check if the player collides with a coin
+        {
+            // Collect the coin
+            other.GetComponent<Coin>().Collect();
+
+            // Update the score
+            GameManager.Instance.UpdateScore(); // Add 10 points for each collected coin
+        }
+    }
 }
