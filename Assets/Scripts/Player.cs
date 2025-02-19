@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform playerModel;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 7f;
-    [SerializeField] private float dashForce = 30f; 
+    [SerializeField] private float dashForce = 3f; 
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     private bool isDashing = false; // Prevent movement during dash
     private int jumpCount = 0;
     private const int maxJumpCount = 2;
+
+    Vector3 moveDirection;
 
     private void Start()
     {
@@ -48,7 +50,7 @@ public class Player : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
-        Vector3 moveDirection = (forward * input.y + right * input.x).normalized;
+        moveDirection = (forward * input.y + right * input.x).normalized;
         rb.linearVelocity = new Vector3(moveDirection.x * speed, rb.linearVelocity.y, moveDirection.z * speed);
     }
 
@@ -111,9 +113,13 @@ public class Player : MonoBehaviour
 
     private void RotatePlayerModel()
     {
-        // Get the camera's y-rotation and apply it to the PlayerModel's rotation
-        float targetAngle = cameraTransform.eulerAngles.y;
-        playerModel.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        if (moveDirection.magnitude >0)
+        {
+            // Get the camera's y-rotation and apply it to the PlayerModel's rotation
+            float targetAngle = cameraTransform.eulerAngles.y;
+            playerModel.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        }
+
     }
 
 }
